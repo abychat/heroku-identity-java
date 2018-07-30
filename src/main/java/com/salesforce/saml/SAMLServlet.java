@@ -50,6 +50,7 @@ public class SAMLServlet extends HttpServlet{
     private Boolean INITIALIZED = false;
     private String ISSUER = null;
     private String IDP_URL = null;
+    private String CUSTOM_ATTR = null;
     private PublicKey IDP_PUBLIC_KEY = null;
 
     @Override
@@ -121,6 +122,7 @@ public class SAMLServlet extends HttpServlet{
                 Node edNode = edXPathResult.item(0);
                 ISSUER = edNode.getAttributes().getNamedItem("entityID").getTextContent();
                 if (ISSUER == null)throw new ServletException("No entityID on Entity Descriptor in SAML_METADATA");
+                CUSTOM_ATTR -
 
                 XPathExpression certXPath = xpath.compile("/md:EntityDescriptor/md:IDPSSODescriptor/md:KeyDescriptor/ds:KeyInfo/ds:X509Data/ds:X509Certificate");
                 NodeList certXPathResult = (NodeList) certXPath.evaluate(metadataDocument, XPathConstants.NODESET);
@@ -149,7 +151,7 @@ public class SAMLServlet extends HttpServlet{
                 Node ssoNode = ssoXPathResult.item(0);
                 IDP_URL = ssoNode.getAttributes().getNamedItem("Location").getTextContent();
                 if (IDP_URL == null)throw new ServletException("No Location for SingleSignOnService with Redirect Binding");
-
+                CUSTOM_ATTR = ssoNode.getAttributes().getNamedItem("contactname").getTextContent();
 
             } catch (XPathExpressionException e) {
                 throw new ServletException("Error Executing XPaths on Metadata", e);
@@ -159,6 +161,7 @@ public class SAMLServlet extends HttpServlet{
             System.out.println("ISSUER:" + ISSUER);
             System.out.println("IDP_URL:" + IDP_URL);
             System.out.println("IDP_PUBLIC_KEY:" + IDP_PUBLIC_KEY);
+            System.out.println("CUSTOM_ATTR:" + CUSTOM_ATTR);
             INITIALIZED = true;
 
         } else {
