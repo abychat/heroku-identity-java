@@ -99,6 +99,8 @@ public class SAMLServlet extends HttpServlet{
                 domFactory.setNamespaceAware(true);
                 DocumentBuilder builder = null;
                 builder = domFactory.newDocumentBuilder();
+                System.out.println("---------Response before error---------");
+                System.out.println(response);
                 metadataDocument = builder.parse(new InputSource(new ByteArrayInputStream(response.getBytes("UTF-8"))));
 
             } catch (Exception e) {
